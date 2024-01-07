@@ -11,9 +11,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Fetch all history for deployment
+        uses: actions/checkout@v2
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -22,14 +20,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Test SSH Connectivity
+      - name: Install SSH Key
         run: |
-          ssh -v ec2-user@ip-172-31-85-67.ec2.internal  # Replace with your EC2 hostname
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 172.31.85.67 >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
         run: |
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./var/www/html/* ec2-user@ip-172-31-85-67.ec2.internal:/var/www/html/
+          rsync -r --delete ./var/www/html/* ec2-user@ip-172-31-85-67:/var/www/html/
 
-      - name: Post-Deployment Tasks (optional)
+      - name: Manual SSH Connection
         run: |
-          # Add any necessary post-deployment steps, such as restarting services
+          ssh -i "C:\Users\Ravikiran_Savai\Desktop\puras01.pem" ec2-user@172.31.85.67
