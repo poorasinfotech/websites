@@ -24,11 +24,11 @@ jobs:
 
       - name: Test SSH Connectivity
         run: |
-          ssh -v ec2-user@${{ secrets.ip-172-31-85-67.ec2.internal }}  # Replace with your EC2 hostname
+          ssh -v ec2-user@ip-172-31-85-67.ec2.internal  # Replace with your EC2 hostname
 
       - name: Deploy to EC2
         run: |
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./var/www/html/* ec2-user@${{ secrets.ip-172-31-85-67.ec2.internal }}:/var/www/html/
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./var/www/html/* ec2-user@ip-172-31-85-67.ec2.internal:/var/www/html/
 
       - name: Post-Deployment Tasks (optional)
         run: |
