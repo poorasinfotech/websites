@@ -20,6 +20,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Test SSH Connectivity
+        run: |
+          ssh -v ec2-user@172.31.85.67  # Test connection and accept host key if needed
+
       - name: Deploy to EC2
         run: |
-          rsync -r --delete ./var/www/html/* ec2-user@172.31.85.67:/var/www/html/
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./var/www/html/* ec2-user@172.31.85.67:/var/www/html/
+
+      - name: Post-Deployment Tasks (optional)
+        run: |
+          # Add any necessary post-deployment steps, such as restarting services
