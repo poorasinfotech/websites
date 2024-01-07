@@ -13,13 +13,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
       - name: Install SSH Key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ec2-user@ip-172-31-85-67 >> ~/.ssh/known_hosts
-
-      - name: Deploy to EC2
-        run: |
-          rsync -r --delete ./path/to/your/code ec2-user@ip-172-31-85-67:/var/www/html/
+          ssh-keyscan
