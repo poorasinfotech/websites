@@ -27,3 +27,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 172.31.85.67 >> ~/.ssh/known_hosts
 
+      - name: Deploy to EC2
+        run: |
+          rsync -r --delete ./path/to/your/code/* ec2-user@172.31.85.67:/var/www/html/
