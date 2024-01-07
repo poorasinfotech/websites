@@ -31,6 +31,3 @@ jobs:
         run: |
           rsync -r --delete ./var/www/html/* ec2-user@172.31.85.67:/var/www/html/
 
-      - name: Manual SSH Connection
-        run: |
-          ssh -i "C:\Users\Ravikiran_Savai\Desktop\puras01.pem" ec2-user@172.31.85.67
