@@ -22,4 +22,4 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          rsync -r --delete ./path/to/your/code/* ec2-user@172.31.85.67:/var/www/html/
+          rsync -r --delete ./var/www/html/* ec2-user@172.31.85.67:/var/www/html/
