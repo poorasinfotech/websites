@@ -20,13 +20,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Install SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 172.31.85.67 >> ~/.ssh/known_hosts
-
       - name: Deploy to EC2
         run: |
           rsync -r --delete ./path/to/your/code/* ec2-user@172.31.85.67:/var/www/html/
