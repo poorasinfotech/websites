@@ -20,10 +20,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-southeast-2  # Adjust to your region
 
-    - name: Copy files via SSH
+    - name: Copy files via SCP
       uses: appleboy/scp-action@v0.1.0
       with:
-        host: ${{ secrets.HOST_DNS }}  # Your public DNS name
+        host: ${{ secrets.HOST_DNS }}  # Update to public DNS name or IP
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}  # Your private SSH key
         source: "./"  # Adjust the source directory if needed
@@ -32,7 +32,7 @@ jobs:
     - name: Execute remote SSH commands
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ${{ secrets.HOST_DNS }}  # Your public DNS name
+        host: ${{ secrets.HOST_DNS }}  # Update to public DNS name or IP
         username: ec2-user
         key: ${{ secrets.EC2_SSH_KEY }}  # Your private SSH key
         script: |
