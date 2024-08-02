@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # Change this to your main branch name
+      - main  # Adjust to your main branch name
 
 jobs:
   deploy:
@@ -13,22 +13,27 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-2  # Adjust to your region
+
     - name: Copy files via SSH
       uses: appleboy/scp-action@v0.1.0
       with:
-        host: ${{ secrets.EC2_HOST }}
+        host: ${{ secrets.HOST_DNS }}  # Your public DNS name
         username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
-        source: "."
-        target: "/var/www/html"
-    
+        key: ${{ secrets.EC2_SSH_KEY }}  # Your private SSH key
+        source: "./"  # Adjust the source directory if needed
+        target: "/var/www/html"  # Target directory on the EC2 instance
+
     - name: Execute remote SSH commands
       uses: appleboy/ssh-action@v0.1.4
       with:
-        host: ${{ secrets.EC2_HOST }}
+        host: ${{ secrets.HOST_DNS }}  # Your public DNS name
         username: ec2-user
-        key: ${{ secrets.EC2_SSH_KEY }}
+        key: ${{ secrets.EC2_SSH_KEY }}  # Your private SSH key
         script: |
-          cd /var/www/html
-          git pull origin main  # Pull the latest changes
-          sudo systemctl restart httpd  # Restart Apache
+          sudo systemctl restart httpd  # Restart Apache to apply changes
